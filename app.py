@@ -79,7 +79,7 @@ def stations():
 
     # Query for a list of stations
     list_of_stations = session.query(station.name).all()
-
+    sort?
     session.close()
 
     # change the data to the right array
@@ -93,7 +93,7 @@ def temperature():
     print("Accessing the Temperature Data")
     session = Session.engine
 
-    #Query to find th temperatures at the most-active stations for the last year
+    #Query to find the temperatures at the most-active stations for the last year
     active_station_annual = session.query(Measurement.tobs).filter(Measurement.station == "USC00519281")\
     .filter(Measurement.date >= '2016-08-23').all()
 
@@ -109,6 +109,9 @@ def temperature():
 def summary1(start):
     print("accessing the summary data with a start date")
     session = Session.engine
+
+    start = datetime.strptime(start, %y-%m-%d).date()
+
     #query for min, max and average temperatures based on date input
     calculations = [func.min(Measurement.tobs),
                     func.max(Measurement.tobs),
@@ -126,7 +129,11 @@ def summary1(start):
         summary_temp["avc"] = func.min(Measurement.tobs)
         summary_data.append(summary_temp)
     
-    return jsonify(summary_data)
+    if start == datetime.strptime(%y-%m-%d):
+        return jsonify(summary_data)
+    
+    else: 
+        f'That is an incorrect date, please use %y '
 
 @app.route("/api/v1.0/<start>/<end>")
 def summary2(start_end):
